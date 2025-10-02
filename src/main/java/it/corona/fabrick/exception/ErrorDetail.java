@@ -21,4 +21,16 @@ public class ErrorDetail {
         this.code = error.getCode();
         this.description = error.getDescription();
     }
+
+    public ErrorDetail(ApiError error, String message) {
+        this.status = error.getHttpStatus().value();
+        this.code = error.getCode();
+        this.description = message;
+    }
+
+    public ErrorDetail(int status, String codice, String description) {
+        this.status = status;
+        this.code = codice;
+        this.description = description;
+    }
 }
