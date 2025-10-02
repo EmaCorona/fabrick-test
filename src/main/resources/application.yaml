@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: "@project.name@"
+    version: "@project.version@"
+  datasource:
+    url: jdbc:h2:mem:test-db
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop #create the database schema on startup and drop it on shutdown
+
+web-client:
+  # 48 MB buffer size
+  buffer-size: 50331648
+
+server:
+  servlet:
+    context-path: /${spring.application.name}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    url: /v3/api-docs
+  api-docs:
+    path: /v3/api-docs
+
+cors:
+  origins: ${AUTH_ALLOW_ORIGIN:http://localhost:3000, http://localhost:8080}
+  methods: ${AUTH_ALLOW_METHODS:GET, POST, PUT, DELETE, PATCH}
+
+fabrick:
+  url:
+    domain: ${FABRICK_DOMAIN}
