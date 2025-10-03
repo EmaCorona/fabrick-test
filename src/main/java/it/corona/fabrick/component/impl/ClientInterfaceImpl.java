@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
-import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.util.Map;
@@ -40,13 +39,7 @@ public class ClientInterfaceImpl implements ClientInterface {
                         headers.forEach(httpHeaders::add);
                     }
                 })
-                .exchangeToMono(response -> {
-                    if (response.statusCode().is2xxSuccessful()) {
-                        return response.bodyToMono(returnType);
-                    } else {
-                        return response.createException().flatMap(Mono::error);
-                    }
-                })
+                .exchangeToMono(response -> response.bodyToMono(returnType))
                 .block();
     }
 
@@ -71,13 +64,7 @@ public class ClientInterfaceImpl implements ClientInterface {
                         headers.forEach(httpHeaders::add);
                     }
                 })
-                .exchangeToMono(response -> {
-                    if (response.statusCode().is2xxSuccessful()) {
-                        return response.bodyToMono(returnType);
-                    } else {
-                        return response.createException().flatMap(Mono::error);
-                    }
-                })
+                .exchangeToMono(response -> response.bodyToMono(returnType))
                 .block();
     }
 
@@ -102,13 +89,7 @@ public class ClientInterfaceImpl implements ClientInterface {
                         headers.forEach(httpHeaders::add);
                     }
                 })
-                .exchangeToMono(response -> {
-                    if (response.statusCode().is2xxSuccessful()) {
-                        return response.bodyToMono(returnType);
-                    } else {
-                        return response.createException().flatMap(Mono::error);
-                    }
-                })
+                .exchangeToMono(response -> response.bodyToMono(returnType))
                 .block();
     }
 
@@ -133,13 +114,7 @@ public class ClientInterfaceImpl implements ClientInterface {
                         headers.forEach(httpHeaders::add);
                     }
                 })
-                .exchangeToMono(response -> {
-                    if (response.statusCode().is2xxSuccessful()) {
-                        return response.bodyToMono(returnType);
-                    } else {
-                        return response.createException().flatMap(Mono::error);
-                    }
-                })
+                .exchangeToMono(response -> response.bodyToMono(returnType))
                 .block();
     }
 

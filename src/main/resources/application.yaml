@@ -10,7 +10,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: create-drop #create the database schema on startup and drop it on shutdown
+      ddl-auto: create-drop
 
 web-client:
   # 48 MB buffer size
@@ -34,3 +34,6 @@ cors:
 fabrick:
   url:
     domain: ${FABRICK_DOMAIN}
+    auth-schema: ${FABRICK_AUTH_SCHEMA}
+    api-key: ${FABRICK_API_KEY}
+    bank-account: ${fabrick.url.domain}/api/gbs/banking/v4.0/accounts/{accountId}
