@@ -12,4 +12,5 @@ public class FabrickConfig {
     private String apiKey;
     private String bankAccount;
     private String balance;
+    private String transactions;
 }

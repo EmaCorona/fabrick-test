@@ -38,3 +38,4 @@ fabrick:
     api-key: ${FABRICK_API_KEY}
     bank-account: ${fabrick.url.domain}/api/gbs/banking/v4.0/accounts/{accountId}
     balance: ${fabrick.url.domain}/api/gbs/banking/v4.0/accounts/{accountId}/balance
+    transactions: ${fabrick.url.domain}/api/gbs/banking/v4.0/accounts/{accountId}/transactions

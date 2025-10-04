@@ -8,6 +8,8 @@ import it.corona.fabrick.enums.FabrickHeader;
 import it.corona.fabrick.exception.ApplicationException;
 import it.corona.fabrick.model.dto.Balance;
 import it.corona.fabrick.model.dto.BankAccount;
+import it.corona.fabrick.model.dto.Transaction;
+import it.corona.fabrick.model.dto.TransactionPayload;
 import it.corona.fabrick.model.response.FabrickResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +17,9 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -51,6 +55,23 @@ public class FabrickClientImpl implements FabrickClient {
                     fabrickConfig.getBalance(),
                     new Object[]{accountId},
                     Map.of(),
+                    getFabrickHeaders(),
+                    new ParameterizedTypeReference<>() {}
+            );
+        } catch (WebClientResponseException ex) {
+            String message = "Error while requesting account balance for accountId: {}, status: {}, body: {}";
+            log.error(message, accountId, ex.getStatusCode(), ex.getResponseBodyAsString());
+            throw new ApplicationException(ApiError.EXTERNAL_CALL_ERROR, ex.getMessage());
+        }
+    }
+
+    @Override
+    public FabrickResponse<TransactionPayload> getAccountTransactions(Long accountId, LocalDate fromAccountingDate, LocalDate toAccountingDate) {
+        try {
+            return clientInterface.getRequest(
+                    fabrickConfig.getTransactions(),
+                    new Object[]{accountId},
+                    Map.of("fromAccountingDate", fromAccountingDate, "toAccountingDate", toAccountingDate),
                     getFabrickHeaders(),
                     new ParameterizedTypeReference<>() {}
             );
