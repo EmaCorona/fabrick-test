@@ -6,6 +6,7 @@ import it.corona.fabrick.config.properties.FabrickConfig;
 import it.corona.fabrick.enums.ApiError;
 import it.corona.fabrick.enums.FabrickHeader;
 import it.corona.fabrick.exception.ApplicationException;
+import it.corona.fabrick.model.dto.Balance;
 import it.corona.fabrick.model.dto.BankAccount;
 import it.corona.fabrick.model.response.FabrickResponse;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,24 @@ public class FabrickClientImpl implements FabrickClient {
                     new ParameterizedTypeReference<>() {}
             );
         } catch (WebClientResponseException ex) {
-            String message = "Error while requesting banking account cash for account id: {}, status: {}, body: {}";
+            String message = "Error while requesting banking account with accountId: {}, status: {}, body: {}";
+            log.error(message, accountId, ex.getStatusCode(), ex.getResponseBodyAsString());
+            throw new ApplicationException(ApiError.EXTERNAL_CALL_ERROR, ex.getMessage());
+        }
+    }
+
+    @Override
+    public FabrickResponse<Balance> getBankAccountBalance(Long accountId) {
+        try {
+            return clientInterface.getRequest(
+                    fabrickConfig.getBalance(),
+                    new Object[]{accountId},
+                    Map.of(),
+                    getFabrickHeaders(),
+                    new ParameterizedTypeReference<>() {}
+            );
+        } catch (WebClientResponseException ex) {
+            String message = "Error while requesting account balance for accountId: {}, status: {}, body: {}";
             log.error(message, accountId, ex.getStatusCode(), ex.getResponseBodyAsString());
             throw new ApplicationException(ApiError.EXTERNAL_CALL_ERROR, ex.getMessage());
         }

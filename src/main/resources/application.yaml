@@ -37,3 +37,4 @@ fabrick:
     auth-schema: ${FABRICK_AUTH_SCHEMA}
     api-key: ${FABRICK_API_KEY}
     bank-account: ${fabrick.url.domain}/api/gbs/banking/v4.0/accounts/{accountId}
+    balance: ${fabrick.url.domain}/api/gbs/banking/v4.0/accounts/{accountId}/balance

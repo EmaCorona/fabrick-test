@@ -1,5 +1,6 @@
 package it.corona.fabrick.controller;
 
+import it.corona.fabrick.model.dto.Balance;
 import it.corona.fabrick.model.dto.BankAccount;
 import it.corona.fabrick.model.response.FabrickResponse;
 import it.corona.fabrick.service.FabrickService;
@@ -21,10 +22,18 @@ public class FabrickController {
 
     // TODO: Documentazione swagger
 
-    @GetMapping("/bank-account")
+    @GetMapping
     public ResponseEntity<FabrickResponse<BankAccount>> getBankAccount(@PathVariable Long accountId) {
         long start = System.currentTimeMillis();
         FabrickResponse<BankAccount> responseBody = fabrickService.getBankAccount(accountId);
+        log.info("Request completed in {} ms", System.currentTimeMillis() - start);
+        return ResponseEntity.ok(responseBody);
+    }
+
+    @GetMapping("/balance")
+    public ResponseEntity<FabrickResponse<Balance>> getBankAccountBalance(@PathVariable Long accountId) {
+        long start = System.currentTimeMillis();
+        FabrickResponse<Balance> responseBody = fabrickService.getBankAccountBalance(accountId);
         log.info("Request completed in {} ms", System.currentTimeMillis() - start);
         return ResponseEntity.ok(responseBody);
     }
