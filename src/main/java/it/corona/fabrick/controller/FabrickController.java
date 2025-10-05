@@ -1,8 +1,8 @@
 package it.corona.fabrick.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import it.corona.fabrick.model.dto.Balance;
 import it.corona.fabrick.model.dto.BankAccount;
-import it.corona.fabrick.model.dto.Transaction;
 import it.corona.fabrick.model.dto.TransactionPayload;
 import it.corona.fabrick.model.response.FabrickResponse;
 import it.corona.fabrick.service.FabrickService;
@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -22,9 +21,8 @@ public class FabrickController {
 
     private final FabrickService fabrickService;
 
-    // TODO: Documentazione swagger
-
     @GetMapping
+    @Operation(summary = "Get the bank account of the specified accountId")
     public ResponseEntity<FabrickResponse<BankAccount>> getBankAccount(@PathVariable Long accountId) {
         long start = System.currentTimeMillis();
         FabrickResponse<BankAccount> responseBody = fabrickService.getBankAccount(accountId);
@@ -33,6 +31,7 @@ public class FabrickController {
     }
 
     @GetMapping("/balance")
+    @Operation(summary = "Get the current balance of the specified bank account")
     public ResponseEntity<FabrickResponse<Balance>> getBankAccountBalance(@PathVariable Long accountId) {
         long start = System.currentTimeMillis();
         FabrickResponse<Balance> responseBody = fabrickService.getBankAccountBalance(accountId);
@@ -41,6 +40,7 @@ public class FabrickController {
     }
 
     @GetMapping("/transactions")
+    @Operation(summary = "Get the list of transactions for a bank account between two accounting dates")
     public ResponseEntity<FabrickResponse<TransactionPayload>> getAccountTransactions(@PathVariable Long accountId,
                                                                                       @RequestParam LocalDate fromAccountingDate,
                                                                                       @RequestParam LocalDate toAccountingDate) {
