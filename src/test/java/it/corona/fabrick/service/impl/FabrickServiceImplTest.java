@@ -1,13 +1,17 @@
 package it.corona.fabrick.service.impl;
 
+import it.corona.fabrick.MockUtils;
 import it.corona.fabrick.component.FabrickClient;
 import it.corona.fabrick.enums.ApiError;
 import it.corona.fabrick.enums.FabrickStatus;
 import it.corona.fabrick.exception.ApplicationException;
 import it.corona.fabrick.mapper.TransactionMapper;
 import it.corona.fabrick.model.dto.*;
+import it.corona.fabrick.model.dto.moneytransfer.*;
 import it.corona.fabrick.model.entity.TransactionEntity;
+import it.corona.fabrick.model.request.PaymentRequest;
 import it.corona.fabrick.model.response.FabrickResponse;
+import it.corona.fabrick.model.dto.moneytransfer.MoneyTransfer;
 import it.corona.fabrick.repository.TransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -65,69 +70,9 @@ public class FabrickServiceImplTest {
     }
 
     @Test
-    void givenNullResponse_getBankAccount_throwApplicationException() {
-        /* ***************** ARRANGE ***************** */
-        when(fabrickClient.getBankAccount(anyLong())).thenReturn(null);
-
-        /* ***************** ACT ***************** */
-        ApplicationException ex = assertThrows(ApplicationException.class, () -> fabrickService.getBankAccount(ACCOUNT_ID));
-
-        /* ***************** ASSERT ***************** */
-        assertEquals(ApiError.BANK_ACCOUNT_ERROR.getCode(), ex.getErrorResponse().getErrors().getFirst().getCode());
-        verify(fabrickClient, times(1)).getBankAccount(ACCOUNT_ID);
-    }
-
-    @Test
-    void givenStatusKO_getBankAccount_throwApplicationException() {
-        /* ***************** ARRANGE ***************** */
-        FabrickResponse<BankAccount> response = new FabrickResponse<>();
-        response.setStatus(FabrickStatus.KO);
-        response.setError(fabrickErrors);
-
-        when(fabrickClient.getBankAccount(anyLong())).thenReturn(response);
-
-        /* ***************** ACT ***************** */
-        ApplicationException ex = assertThrows(ApplicationException.class, () -> fabrickService.getBankAccount(ACCOUNT_ID));
-
-        /* ***************** ASSERT ***************** */
-        assertEquals(response.getError().getFirst().getCode(), ex.getErrorResponse().getErrors().getFirst().getCode());
-        assertEquals(response.getError().getLast().getCode(), ex.getErrorResponse().getErrors().getLast().getCode());
-        verify(fabrickClient, times(1)).getBankAccount(ACCOUNT_ID);
-    }
-
-    @Test
-    void givenStatusKOWithoutErrors_getBankAccount_throwApplicationException() {
-        /* ***************** ARRANGE ***************** */
-        FabrickResponse<BankAccount> response = new FabrickResponse<>();
-        response.setStatus(FabrickStatus.KO);
-
-        when(fabrickClient.getBankAccount(anyLong())).thenReturn(response);
-
-        /* ***************** ACT ***************** */
-        ApplicationException ex = assertThrows(ApplicationException.class, () -> fabrickService.getBankAccount(ACCOUNT_ID));
-
-        /* ***************** ASSERT ***************** */
-        assertEquals(ApiError.BANK_ACCOUNT_ERROR.getCode(), ex.getErrorResponse().getErrors().getLast().getCode());
-        verify(fabrickClient, times(1)).getBankAccount(ACCOUNT_ID);
-    }
-
-    @Test
     void givenStatusOk_getBankAccount_ReturnsBankAccount() {
         /* ***************** ARRANGE ***************** */
-        final BankAccount bankAccount = new BankAccount();
-        bankAccount.setAccountId("14537780");
-        bankAccount.setIban("IT40L0326822311052923800661");
-        bankAccount.setAbiCode("03268");
-        bankAccount.setCabCode("22311");
-        bankAccount.setCountryCode("IT");
-        bankAccount.setInternationalCin("40");
-        bankAccount.setNationalCin("L");
-        bankAccount.setAccount("52923800661");
-        bankAccount.setAlias("Test api");
-        bankAccount.setProductName("Conto Websella");
-        bankAccount.setHolderName("VALERIAS VELERIA ALBERTARIO ALBERTO");
-        bankAccount.setActivatedDate(LocalDate.parse("2016-12-14"));
-        bankAccount.setCurrency("EUR");
+        final BankAccount bankAccount = MockUtils.getMockedBankAccount();
 
         FabrickResponse<BankAccount> response = new FabrickResponse<>();
         response.setStatus(FabrickStatus.OK);
@@ -146,61 +91,56 @@ public class FabrickServiceImplTest {
     }
 
     @Test
-    void givenNullResponse_getBankAccountBalance_throwApplicationException() {
+    void givenNullResponse_getBankAccount_throwApplicationException() {
         /* ***************** ARRANGE ***************** */
-        when(fabrickClient.getBankAccountBalance(anyLong())).thenReturn(null);
+        when(fabrickClient.getBankAccount(anyLong())).thenReturn(null);
 
         /* ***************** ACT ***************** */
-        ApplicationException ex = assertThrows(ApplicationException.class, () -> fabrickService.getBankAccountBalance(ACCOUNT_ID));
+        ApplicationException ex = assertThrows(ApplicationException.class, () -> fabrickService.getBankAccount(ACCOUNT_ID));
 
         /* ***************** ASSERT ***************** */
-        assertEquals(ApiError.BANK_ACCOUNT_BALANCE_ERROR.getCode(), ex.getErrorResponse().getErrors().getFirst().getCode());
-        verify(fabrickClient, times(1)).getBankAccountBalance(ACCOUNT_ID);
+        assertEquals(ApiError.BANK_ACCOUNT_ERROR.getCode(), ex.getErrorResponse().getErrors().getFirst().getCode());
+        verify(fabrickClient, times(1)).getBankAccount(ACCOUNT_ID);
     }
 
     @Test
-    void givenStatusKO_getBankAccountBalance_throwApplicationException() {
+    void givenStatusKo_getBankAccount_throwApplicationException() {
         /* ***************** ARRANGE ***************** */
-        FabrickResponse<Balance> response = new FabrickResponse<>();
+        FabrickResponse<BankAccount> response = new FabrickResponse<>();
         response.setStatus(FabrickStatus.KO);
-        response.setError(fabrickErrors);
+        response.setErrors(fabrickErrors);
 
-        when(fabrickClient.getBankAccountBalance(anyLong())).thenReturn(response);
+        when(fabrickClient.getBankAccount(anyLong())).thenReturn(response);
 
         /* ***************** ACT ***************** */
-        ApplicationException ex = assertThrows(ApplicationException.class, () -> fabrickService.getBankAccountBalance(ACCOUNT_ID));
+        ApplicationException ex = assertThrows(ApplicationException.class, () -> fabrickService.getBankAccount(ACCOUNT_ID));
 
         /* ***************** ASSERT ***************** */
-        assertEquals(response.getError().getFirst().getCode(), ex.getErrorResponse().getErrors().getFirst().getCode());
-        assertEquals(response.getError().getLast().getCode(), ex.getErrorResponse().getErrors().getLast().getCode());
-        verify(fabrickClient, times(1)).getBankAccountBalance(ACCOUNT_ID);
+        assertEquals(response.getErrors().getFirst().getCode(), ex.getErrorResponse().getErrors().getFirst().getCode());
+        assertEquals(response.getErrors().getLast().getCode(), ex.getErrorResponse().getErrors().getLast().getCode());
+        verify(fabrickClient, times(1)).getBankAccount(ACCOUNT_ID);
     }
 
     @Test
-    void givenStatusKOWithoutErrors_getBankAccountBalance_throwApplicationException() {
+    void givenStatusKoWithoutErrors_getBankAccount_throwApplicationException() {
         /* ***************** ARRANGE ***************** */
-        FabrickResponse<Balance> response = new FabrickResponse<>();
+        FabrickResponse<BankAccount> response = new FabrickResponse<>();
         response.setStatus(FabrickStatus.KO);
 
-        when(fabrickClient.getBankAccountBalance(anyLong())).thenReturn(response);
+        when(fabrickClient.getBankAccount(anyLong())).thenReturn(response);
 
         /* ***************** ACT ***************** */
-        ApplicationException ex = assertThrows(ApplicationException.class, () -> fabrickService.getBankAccountBalance(ACCOUNT_ID));
+        ApplicationException ex = assertThrows(ApplicationException.class, () -> fabrickService.getBankAccount(ACCOUNT_ID));
 
         /* ***************** ASSERT ***************** */
-        assertEquals(ApiError.BANK_ACCOUNT_BALANCE_ERROR.getCode(), ex.getErrorResponse().getErrors().getLast().getCode());
-        verify(fabrickClient, times(1)).getBankAccountBalance(ACCOUNT_ID);
+        assertEquals(ApiError.BANK_ACCOUNT_ERROR.getCode(), ex.getErrorResponse().getErrors().getLast().getCode());
+        verify(fabrickClient, times(1)).getBankAccount(ACCOUNT_ID);
     }
 
     @Test
     void givenStatusOk_getBankAccountBalance_ReturnsBankAccount() {
         /* ***************** ARRANGE ***************** */
-        Balance balance = Balance.builder()
-                .date(LocalDate.parse("2025-10-04"))
-                .balance(BigDecimal.valueOf(-16.79))
-                .availableBalance(BigDecimal.valueOf(-16.79))
-                .currency("EUR")
-                .build();
+        Balance balance = MockUtils.getMockedBalance();
 
         FabrickResponse<Balance> response = new FabrickResponse<>();
         response.setStatus(FabrickStatus.OK);
@@ -219,56 +159,50 @@ public class FabrickServiceImplTest {
     }
 
     @Test
-    void givenNullResponse_getAccountTransactions_throwApplicationException() {
+    void givenNullResponse_getBankAccountBalance_throwApplicationException() {
         /* ***************** ARRANGE ***************** */
-        when(fabrickClient.getAccountTransactions(anyLong(), any(LocalDate.class), any(LocalDate.class))).thenReturn(null);
+        when(fabrickClient.getBankAccountBalance(anyLong())).thenReturn(null);
 
         /* ***************** ACT ***************** */
-        ApplicationException ex = assertThrows(
-                ApplicationException.class, () -> fabrickService.getAccountTransactions(ACCOUNT_ID, fromAccountingDate, toAccountingDate)
-        );
+        ApplicationException ex = assertThrows(ApplicationException.class, () -> fabrickService.getBankAccountBalance(ACCOUNT_ID));
 
         /* ***************** ASSERT ***************** */
-        assertEquals(ApiError.BANK_ACCOUNT_TRANSACTION_ERROR.getCode(), ex.getErrorResponse().getErrors().getFirst().getCode());
-        verify(fabrickClient, times(1)).getAccountTransactions(ACCOUNT_ID, fromAccountingDate, toAccountingDate);
+        assertEquals(ApiError.BANK_ACCOUNT_BALANCE_ERROR.getCode(), ex.getErrorResponse().getErrors().getFirst().getCode());
+        verify(fabrickClient, times(1)).getBankAccountBalance(ACCOUNT_ID);
     }
 
     @Test
-    void givenStatusKo_getAccountTransactions_throwApplicationException() {
+    void givenStatusKo_getBankAccountBalance_throwApplicationException() {
         /* ***************** ARRANGE ***************** */
-        FabrickResponse<TransactionPayload> response = new FabrickResponse<>();
+        FabrickResponse<Balance> response = new FabrickResponse<>();
         response.setStatus(FabrickStatus.KO);
-        response.setError(fabrickErrors);
+        response.setErrors(fabrickErrors);
 
-        when(fabrickClient.getAccountTransactions(anyLong(), any(LocalDate.class), any(LocalDate.class))).thenReturn(response);
+        when(fabrickClient.getBankAccountBalance(anyLong())).thenReturn(response);
 
         /* ***************** ACT ***************** */
-        ApplicationException ex = assertThrows(
-                ApplicationException.class, () -> fabrickService.getAccountTransactions(ACCOUNT_ID, fromAccountingDate, toAccountingDate)
-        );
+        ApplicationException ex = assertThrows(ApplicationException.class, () -> fabrickService.getBankAccountBalance(ACCOUNT_ID));
 
         /* ***************** ASSERT ***************** */
-        assertEquals(response.getError().getFirst().getCode(), ex.getErrorResponse().getErrors().getFirst().getCode());
-        assertEquals(response.getError().getLast().getCode(), ex.getErrorResponse().getErrors().getLast().getCode());
-        verify(fabrickClient, times(1)).getAccountTransactions(ACCOUNT_ID, fromAccountingDate, toAccountingDate);
+        assertEquals(response.getErrors().getFirst().getCode(), ex.getErrorResponse().getErrors().getFirst().getCode());
+        assertEquals(response.getErrors().getLast().getCode(), ex.getErrorResponse().getErrors().getLast().getCode());
+        verify(fabrickClient, times(1)).getBankAccountBalance(ACCOUNT_ID);
     }
 
     @Test
-    void givenStatusKoWithoutErrors_getAccountTransactions_throwApplicationException() {
+    void givenStatusKoWithoutErrors_getBankAccountBalance_throwApplicationException() {
         /* ***************** ARRANGE ***************** */
-        FabrickResponse<TransactionPayload> response = new FabrickResponse<>();
+        FabrickResponse<Balance> response = new FabrickResponse<>();
         response.setStatus(FabrickStatus.KO);
 
-        when(fabrickClient.getAccountTransactions(anyLong(), any(LocalDate.class), any(LocalDate.class))).thenReturn(response);
+        when(fabrickClient.getBankAccountBalance(anyLong())).thenReturn(response);
 
         /* ***************** ACT ***************** */
-        ApplicationException ex = assertThrows(
-                ApplicationException.class, () -> fabrickService.getAccountTransactions(ACCOUNT_ID, fromAccountingDate, toAccountingDate)
-        );
+        ApplicationException ex = assertThrows(ApplicationException.class, () -> fabrickService.getBankAccountBalance(ACCOUNT_ID));
 
         /* ***************** ASSERT ***************** */
-        assertEquals(ApiError.BANK_ACCOUNT_TRANSACTION_ERROR.getCode(), ex.getErrorResponse().getErrors().getLast().getCode());
-        verify(fabrickClient, times(1)).getAccountTransactions(ACCOUNT_ID, fromAccountingDate, toAccountingDate);
+        assertEquals(ApiError.BANK_ACCOUNT_BALANCE_ERROR.getCode(), ex.getErrorResponse().getErrors().getLast().getCode());
+        verify(fabrickClient, times(1)).getBankAccountBalance(ACCOUNT_ID);
     }
 
     @Test
@@ -297,6 +231,59 @@ public class FabrickServiceImplTest {
         assertNotNull(result);
         assertEquals(FabrickStatus.OK, result.getStatus());
         assertEquals(payload, result.getPayload());
+        verify(fabrickClient, times(1)).getAccountTransactions(ACCOUNT_ID, fromAccountingDate, toAccountingDate);
+    }
+
+    @Test
+    void givenNullResponse_getAccountTransactions_throwApplicationException() {
+        /* ***************** ARRANGE ***************** */
+        when(fabrickClient.getAccountTransactions(anyLong(), any(LocalDate.class), any(LocalDate.class))).thenReturn(null);
+
+        /* ***************** ACT ***************** */
+        ApplicationException ex = assertThrows(
+                ApplicationException.class, () -> fabrickService.getAccountTransactions(ACCOUNT_ID, fromAccountingDate, toAccountingDate)
+        );
+
+        /* ***************** ASSERT ***************** */
+        assertEquals(ApiError.BANK_ACCOUNT_TRANSACTION_ERROR.getCode(), ex.getErrorResponse().getErrors().getFirst().getCode());
+        verify(fabrickClient, times(1)).getAccountTransactions(ACCOUNT_ID, fromAccountingDate, toAccountingDate);
+    }
+
+    @Test
+    void givenStatusKo_getAccountTransactions_throwApplicationException() {
+        /* ***************** ARRANGE ***************** */
+        FabrickResponse<TransactionPayload> response = new FabrickResponse<>();
+        response.setStatus(FabrickStatus.KO);
+        response.setErrors(fabrickErrors);
+
+        when(fabrickClient.getAccountTransactions(anyLong(), any(LocalDate.class), any(LocalDate.class))).thenReturn(response);
+
+        /* ***************** ACT ***************** */
+        ApplicationException ex = assertThrows(
+                ApplicationException.class, () -> fabrickService.getAccountTransactions(ACCOUNT_ID, fromAccountingDate, toAccountingDate)
+        );
+
+        /* ***************** ASSERT ***************** */
+        assertEquals(response.getErrors().getFirst().getCode(), ex.getErrorResponse().getErrors().getFirst().getCode());
+        assertEquals(response.getErrors().getLast().getCode(), ex.getErrorResponse().getErrors().getLast().getCode());
+        verify(fabrickClient, times(1)).getAccountTransactions(ACCOUNT_ID, fromAccountingDate, toAccountingDate);
+    }
+
+    @Test
+    void givenStatusKoWithoutErrors_getAccountTransactions_throwApplicationException() {
+        /* ***************** ARRANGE ***************** */
+        FabrickResponse<TransactionPayload> response = new FabrickResponse<>();
+        response.setStatus(FabrickStatus.KO);
+
+        when(fabrickClient.getAccountTransactions(anyLong(), any(LocalDate.class), any(LocalDate.class))).thenReturn(response);
+
+        /* ***************** ACT ***************** */
+        ApplicationException ex = assertThrows(
+                ApplicationException.class, () -> fabrickService.getAccountTransactions(ACCOUNT_ID, fromAccountingDate, toAccountingDate)
+        );
+
+        /* ***************** ASSERT ***************** */
+        assertEquals(ApiError.BANK_ACCOUNT_TRANSACTION_ERROR.getCode(), ex.getErrorResponse().getErrors().getLast().getCode());
         verify(fabrickClient, times(1)).getAccountTransactions(ACCOUNT_ID, fromAccountingDate, toAccountingDate);
     }
 
@@ -369,5 +356,73 @@ public class FabrickServiceImplTest {
         /* ***************** ASSERT ***************** */
         assertEquals(trxToSave.getId(), existingEntity.getId());
         verify(transactionRepository).save(trxToSave);
+    }
+
+    @Test
+    void givenStatusOk_createMoneyTransfer_returnsMoneyTransfer() {
+        /* ***************** ARRANGE ***************** */
+        MoneyTransfer moneyTransfer = MockUtils.getMockedMoneyTransfer();
+
+        FabrickResponse<MoneyTransfer> response = new FabrickResponse<>();
+        response.setStatus(FabrickStatus.OK);
+        response.setPayload(moneyTransfer);
+
+        when(fabrickClient.createMoneyTransfer(any(PaymentRequest.class), anyLong())).thenReturn(response);
+
+        /* ***************** ACT ***************** */
+        FabrickResponse<MoneyTransfer> result = fabrickService.createMoneyTransfer(new PaymentRequest(), ACCOUNT_ID);
+
+        /* ***************** ASSERT ***************** */
+        assertNotNull(result);
+        assertEquals(FabrickStatus.OK, result.getStatus());
+        assertEquals(moneyTransfer, result.getPayload());
+        verify(fabrickClient, times(1)).createMoneyTransfer(new PaymentRequest(), ACCOUNT_ID);
+    }
+
+    @Test
+    void givenNullResponse_createMoneyTransfer_throwApplicationException() {
+        /* ***************** ARRANGE ***************** */
+        when(fabrickClient.createMoneyTransfer(any(PaymentRequest.class), anyLong())).thenReturn(null);
+
+        /* ***************** ACT ***************** */
+        ApplicationException ex = assertThrows(ApplicationException.class, () -> fabrickService.createMoneyTransfer(new PaymentRequest(), ACCOUNT_ID));
+
+        /* ***************** ASSERT ***************** */
+        assertEquals(ApiError.MONEY_TRANSFER_ERROR.getCode(), ex.getErrorResponse().getErrors().getFirst().getCode());
+        verify(fabrickClient, times(1)).createMoneyTransfer(any(PaymentRequest.class), anyLong());
+    }
+
+    @Test
+    void givenStatusKo_createMoneyTransfer_throwApplicationException() {
+        /* ***************** ARRANGE ***************** */
+        FabrickResponse<MoneyTransfer> response = new FabrickResponse<>();
+        response.setStatus(FabrickStatus.KO);
+        response.setErrors(fabrickErrors);
+
+        when(fabrickClient.createMoneyTransfer(any(PaymentRequest.class), anyLong())).thenReturn(response);
+
+        /* ***************** ACT ***************** */
+        ApplicationException ex = assertThrows(ApplicationException.class, () -> fabrickService.createMoneyTransfer(new PaymentRequest(), ACCOUNT_ID));
+
+        /* ***************** ASSERT ***************** */
+        assertEquals(response.getErrors().getFirst().getCode(), ex.getErrorResponse().getErrors().getFirst().getCode());
+        assertEquals(response.getErrors().getLast().getCode(), ex.getErrorResponse().getErrors().getLast().getCode());
+        verify(fabrickClient, times(1)).createMoneyTransfer(any(PaymentRequest.class), anyLong());
+    }
+
+    @Test
+    void givenStatusKoWithoutErrors_createMoneyTransfer_throwApplicationException() {
+        /* ***************** ARRANGE ***************** */
+        FabrickResponse<MoneyTransfer> response = new FabrickResponse<>();
+        response.setStatus(FabrickStatus.KO);
+
+        when(fabrickClient.createMoneyTransfer(any(PaymentRequest.class), anyLong())).thenReturn(response);
+
+        /* ***************** ACT ***************** */
+        ApplicationException ex = assertThrows(ApplicationException.class, () -> fabrickService.createMoneyTransfer(new PaymentRequest(), ACCOUNT_ID));
+
+        /* ***************** ASSERT ***************** */
+        assertEquals(ApiError.MONEY_TRANSFER_ERROR.getCode(), ex.getErrorResponse().getErrors().getLast().getCode());
+        verify(fabrickClient, times(1)).createMoneyTransfer(any(PaymentRequest.class), anyLong());
     }
 }

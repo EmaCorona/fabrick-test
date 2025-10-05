@@ -13,4 +13,6 @@ public class FabrickConfig {
     private String bankAccount;
     private String balance;
     private String transactions;
+    private String moneyTransfer;
+    private String timeZone;
 }

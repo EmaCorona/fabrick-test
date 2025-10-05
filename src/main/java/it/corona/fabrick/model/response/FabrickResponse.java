@@ -14,6 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 public class FabrickResponse<T> {
     private FabrickStatus status;
-    private List<FabrickError> error = new ArrayList<>();
+    private List<FabrickError> errors = new ArrayList<>();
     private T payload;
 }

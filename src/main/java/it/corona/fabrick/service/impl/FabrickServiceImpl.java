@@ -10,9 +10,12 @@ import it.corona.fabrick.model.dto.BankAccount;
 import it.corona.fabrick.model.dto.Transaction;
 import it.corona.fabrick.model.dto.TransactionPayload;
 import it.corona.fabrick.model.entity.TransactionEntity;
+import it.corona.fabrick.model.request.PaymentRequest;
 import it.corona.fabrick.model.response.FabrickResponse;
+import it.corona.fabrick.model.dto.moneytransfer.MoneyTransfer;
 import it.corona.fabrick.repository.TransactionRepository;
 import it.corona.fabrick.service.FabrickService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -48,7 +51,7 @@ public class FabrickServiceImpl implements FabrickService {
         if (response.getStatus().equals(FabrickStatus.KO)) {
             String message = String.format(
                     "Received an error response for bank account request with accountId: %s, errors: %s",
-                    accountId, (!CollectionUtils.isEmpty(response.getError())) ? response.getError().toString() : "Unknown error"
+                    accountId, (!CollectionUtils.isEmpty(response.getErrors())) ? response.getErrors().toString() : "Unknown error"
             );
 
             handleFabrickError(response, message, ApiError.BANK_ACCOUNT_ERROR);
@@ -73,7 +76,7 @@ public class FabrickServiceImpl implements FabrickService {
         if (response.getStatus().equals(FabrickStatus.KO)) {
             String message = String.format(
                     "Received an error response for account balance request with accountId: %s, errors: %s",
-                    accountId, (!CollectionUtils.isEmpty(response.getError())) ? response.getError().toString() : "Unknown error"
+                    accountId, (!CollectionUtils.isEmpty(response.getErrors())) ? response.getErrors().toString() : "Unknown error"
             );
 
             handleFabrickError(response, message, ApiError.BANK_ACCOUNT_BALANCE_ERROR);
@@ -98,7 +101,7 @@ public class FabrickServiceImpl implements FabrickService {
         if (response.getStatus().equals(FabrickStatus.KO)) {
             String message = String.format(
                     "Received an error response for account transactions request with accountId: %s, errors: %s",
-                    accountId, (!CollectionUtils.isEmpty(response.getError())) ? response.getError().toString() : "Unknown error"
+                    accountId, (!CollectionUtils.isEmpty(response.getErrors())) ? response.getErrors().toString() : "Unknown error"
             );
 
             handleFabrickError(response, message, ApiError.BANK_ACCOUNT_TRANSACTION_ERROR);
@@ -138,12 +141,34 @@ public class FabrickServiceImpl implements FabrickService {
         }
     }
 
+    @Override
+    public FabrickResponse<MoneyTransfer> createMoneyTransfer(@Valid PaymentRequest request, Long accountId) {
+        log.info("Initializing money-transfer from accounId: {}", accountId);
+        final FabrickResponse<MoneyTransfer> response = fabrickClient.createMoneyTransfer(request, accountId);
+
+        if (response == null) {
+            String message = String.format("Received null response money-transfer request with accountId: %s", accountId);
+            log.error(message);
+            throw new ApplicationException(ApiError.MONEY_TRANSFER_ERROR, message);
+        }
+
+        if (response.getStatus().equals(FabrickStatus.KO)) {
+            String message = String.format(
+                    "Received an error response for money-transfer request with accountId: %s, errors: %s",
+                    accountId, (!CollectionUtils.isEmpty(response.getErrors())) ? response.getErrors().toString() : "Unknown error"
+            );
+
+            handleFabrickError(response, message, ApiError.MONEY_TRANSFER_ERROR);
+        }
+
+        return response;
+    }
+
     private <T> void handleFabrickError(FabrickResponse<T> response, String message, ApiError error) {
         log.error(message);
 
-        // Check on response.getError() because even when it's KO, it returns null
-        throw (!CollectionUtils.isEmpty(response.getError())) ?
-                new ApplicationException(response.getError()) :
+        throw (!CollectionUtils.isEmpty(response.getErrors())) ?
+                new ApplicationException(response.getErrors()) :
                 new ApplicationException(error, message);
     }
 }

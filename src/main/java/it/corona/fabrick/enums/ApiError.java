@@ -10,9 +10,10 @@ public enum ApiError {
 
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "Internal server error"),
     EXTERNAL_CALL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "EXTERNAL_CALL_ERROR", "An error occurred while making a call to an external service"),
-    BANK_ACCOUNT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "BANKING_ACCOUNT_CASH_ERROR", "Error while retrieving bank account"),
-    BANK_ACCOUNT_BALANCE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "BANKING_ACCOUNT_BALANCE_ERROR", "Error while retrieving account balance"),
-    BANK_ACCOUNT_TRANSACTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "BANKING_ACCOUNT_TRANSACTION_ERROR", "Error while retrieving account transactions");
+    BANK_ACCOUNT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "BANK_ACCOUNT_ERROR", "Error while retrieving bank account"),
+    BANK_ACCOUNT_BALANCE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "BANK_ACCOUNT_BALANCE_ERROR", "Error while retrieving account balance"),
+    BANK_ACCOUNT_TRANSACTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "BANK_ACCOUNT_TRANSACTION_ERROR", "Error while retrieving account transactions"),
+    MONEY_TRANSFER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "MONEY_TRANSFER_ERROR", "Error while making a money transfer");
 
     private final HttpStatus httpStatus;
     private final String code;

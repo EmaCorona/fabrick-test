@@ -1,0 +1,35 @@
+package it.corona.fabrick.model.request;
+
+import it.corona.fabrick.model.dto.moneytransfer.Creditor;
+import it.corona.fabrick.model.dto.moneytransfer.TaxRelief;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class PaymentRequest {
+    @NotNull
+    private Creditor creditor;
+    private LocalDate executionDate;
+    private String uri;
+    @NotBlank
+    private String description;
+    @NotNull
+    private BigDecimal amount;
+    @NotBlank
+    private String currency;
+    private boolean isUrgent;
+    private boolean isInstant;
+    private String feeType;
+    private String feeAccountId;
+    private TaxRelief taxRelief;
+}
