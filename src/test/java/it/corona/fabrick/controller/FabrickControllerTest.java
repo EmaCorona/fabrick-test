@@ -118,7 +118,7 @@ public class FabrickControllerTest {
         response.setStatus(FabrickStatus.OK);
         response.setPayload(MockUtils.getMockedBalance());
 
-        when(fabrickService.getBankAccountBalance(anyLong())).thenReturn(response);
+        when(fabrickService.getAccountBalance(anyLong())).thenReturn(response);
 
         /* ***************** ACT ***************** */
         mockMvc.perform(get(GET_ACCOUNT_BALANCE_ENDPOINT, ACCOUNT_ID)
@@ -127,7 +127,7 @@ public class FabrickControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(response)));
 
         /* ***************** ASSERT ***************** */
-        verify(fabrickService).getBankAccountBalance(eq(ACCOUNT_ID));
+        verify(fabrickService).getAccountBalance(eq(ACCOUNT_ID));
     }
 
     @Test
@@ -138,7 +138,7 @@ public class FabrickControllerTest {
                 .andExpect(status().isBadRequest());
 
         /* ***************** ASSERT ***************** */
-        verify(fabrickService, never()).getBankAccountBalance(eq(ACCOUNT_ID));
+        verify(fabrickService, never()).getAccountBalance(eq(ACCOUNT_ID));
     }
 
     @Test
@@ -153,7 +153,7 @@ public class FabrickControllerTest {
         response.setStatus(FabrickStatus.KO);
         response.setErrors(List.of(error));
 
-        when(fabrickService.getBankAccountBalance(anyLong()))
+        when(fabrickService.getAccountBalance(anyLong()))
                 .thenThrow(new ApplicationException(response.getErrors()));
 
         /* ***************** ACT ***************** */
@@ -162,7 +162,7 @@ public class FabrickControllerTest {
                 .andExpect(status().isInternalServerError());
 
         /* ***************** ASSERT ***************** */
-        verify(fabrickService).getBankAccountBalance(eq(ACCOUNT_ID));
+        verify(fabrickService).getAccountBalance(eq(ACCOUNT_ID));
     }
 
     // API: getAccountTransactions

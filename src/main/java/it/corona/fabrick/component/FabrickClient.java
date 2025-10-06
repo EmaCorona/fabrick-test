@@ -12,7 +12,7 @@ import java.time.LocalDate;
 
 public interface FabrickClient {
     FabrickResponse<BankAccount> getBankAccount(Long accountId);
-    FabrickResponse<Balance> getBankAccountBalance(Long accountId);
+    FabrickResponse<Balance> getAccountBalance(Long accountId);
     FabrickResponse<TransactionPayload> getAccountTransactions(Long accountId, LocalDate fromAccountingDate, LocalDate toAccountingDate);
     FabrickResponse<MoneyTransfer> createMoneyTransfer(@Valid PaymentRequest request, Long accountId);
 }

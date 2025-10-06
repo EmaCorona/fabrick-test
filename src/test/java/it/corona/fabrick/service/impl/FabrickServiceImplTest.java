@@ -143,29 +143,29 @@ public class FabrickServiceImplTest {
         response.setStatus(FabrickStatus.OK);
         response.setPayload(balance);
 
-        when(fabrickClient.getBankAccountBalance(anyLong())).thenReturn(response);
+        when(fabrickClient.getAccountBalance(anyLong())).thenReturn(response);
 
         /* ***************** ACT ***************** */
-        FabrickResponse<Balance> result = fabrickService.getBankAccountBalance(ACCOUNT_ID);
+        FabrickResponse<Balance> result = fabrickService.getAccountBalance(ACCOUNT_ID);
 
         /* ***************** ASSERT ***************** */
         assertNotNull(result);
         assertEquals(FabrickStatus.OK, result.getStatus());
         assertEquals(balance, result.getPayload());
-        verify(fabrickClient, times(1)).getBankAccountBalance(ACCOUNT_ID);
+        verify(fabrickClient, times(1)).getAccountBalance(ACCOUNT_ID);
     }
 
     @Test
     void givenNullResponse_getBankAccountBalance_throwApplicationException() {
         /* ***************** ARRANGE ***************** */
-        when(fabrickClient.getBankAccountBalance(anyLong())).thenReturn(null);
+        when(fabrickClient.getAccountBalance(anyLong())).thenReturn(null);
 
         /* ***************** ACT ***************** */
-        ApplicationException ex = assertThrows(ApplicationException.class, () -> fabrickService.getBankAccountBalance(ACCOUNT_ID));
+        ApplicationException ex = assertThrows(ApplicationException.class, () -> fabrickService.getAccountBalance(ACCOUNT_ID));
 
         /* ***************** ASSERT ***************** */
         assertEquals(ApiError.BANK_ACCOUNT_BALANCE_ERROR.getCode(), ex.getErrorResponse().getErrors().getFirst().getCode());
-        verify(fabrickClient, times(1)).getBankAccountBalance(ACCOUNT_ID);
+        verify(fabrickClient, times(1)).getAccountBalance(ACCOUNT_ID);
     }
 
     @Test
@@ -175,15 +175,15 @@ public class FabrickServiceImplTest {
         response.setStatus(FabrickStatus.KO);
         response.setErrors(fabrickErrors);
 
-        when(fabrickClient.getBankAccountBalance(anyLong())).thenReturn(response);
+        when(fabrickClient.getAccountBalance(anyLong())).thenReturn(response);
 
         /* ***************** ACT ***************** */
-        ApplicationException ex = assertThrows(ApplicationException.class, () -> fabrickService.getBankAccountBalance(ACCOUNT_ID));
+        ApplicationException ex = assertThrows(ApplicationException.class, () -> fabrickService.getAccountBalance(ACCOUNT_ID));
 
         /* ***************** ASSERT ***************** */
         assertEquals(response.getErrors().getFirst().getCode(), ex.getErrorResponse().getErrors().getFirst().getCode());
         assertEquals(response.getErrors().getLast().getCode(), ex.getErrorResponse().getErrors().getLast().getCode());
-        verify(fabrickClient, times(1)).getBankAccountBalance(ACCOUNT_ID);
+        verify(fabrickClient, times(1)).getAccountBalance(ACCOUNT_ID);
     }
 
     @Test
@@ -192,14 +192,14 @@ public class FabrickServiceImplTest {
         FabrickResponse<Balance> response = new FabrickResponse<>();
         response.setStatus(FabrickStatus.KO);
 
-        when(fabrickClient.getBankAccountBalance(anyLong())).thenReturn(response);
+        when(fabrickClient.getAccountBalance(anyLong())).thenReturn(response);
 
         /* ***************** ACT ***************** */
-        ApplicationException ex = assertThrows(ApplicationException.class, () -> fabrickService.getBankAccountBalance(ACCOUNT_ID));
+        ApplicationException ex = assertThrows(ApplicationException.class, () -> fabrickService.getAccountBalance(ACCOUNT_ID));
 
         /* ***************** ASSERT ***************** */
         assertEquals(ApiError.BANK_ACCOUNT_BALANCE_ERROR.getCode(), ex.getErrorResponse().getErrors().getLast().getCode());
-        verify(fabrickClient, times(1)).getBankAccountBalance(ACCOUNT_ID);
+        verify(fabrickClient, times(1)).getAccountBalance(ACCOUNT_ID);
     }
 
     @Test

@@ -33,8 +33,8 @@ public class FabrickController {
 
     @GetMapping("/balance")
     @Operation(summary = "Get the current balance of the specified bank account")
-    public ResponseEntity<FabrickResponse<Balance>> getBankAccountBalance(@PathVariable Long accountId) {
-        return ResponseEntity.ok(fabrickService.getBankAccountBalance(accountId));
+    public ResponseEntity<FabrickResponse<Balance>> getAccountBalance(@PathVariable Long accountId) {
+        return ResponseEntity.ok(fabrickService.getAccountBalance(accountId));
     }
 
     @GetMapping("/transactions")

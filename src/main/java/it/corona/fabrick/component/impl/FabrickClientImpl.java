@@ -50,7 +50,7 @@ public class FabrickClientImpl implements FabrickClient {
     }
 
     @Override
-    public FabrickResponse<Balance> getBankAccountBalance(Long accountId) {
+    public FabrickResponse<Balance> getAccountBalance(Long accountId) {
         try {
             return clientInterface.getRequest(
                     fabrickConfig.getBalance(),
