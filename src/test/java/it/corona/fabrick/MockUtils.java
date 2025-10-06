@@ -1,7 +1,7 @@
 package it.corona.fabrick;
 
 
-import it.corona.fabrick.enums.Enumeration;
+import it.corona.fabrick.enums.*;
 import it.corona.fabrick.model.dto.*;
 import it.corona.fabrick.model.request.PaymentRequest;
 
@@ -81,8 +81,8 @@ public class MockUtils {
     public static MoneyTransfer getMockedMoneyTransfer() {
         MoneyTransfer moneyTranfer = new MoneyTransfer();
         moneyTranfer.setMoneyTransferId("452516859427");
-        moneyTranfer.setStatus("EXECUTED");
-        moneyTranfer.setDirection("OUTGOING");
+        moneyTranfer.setStatus(MoneyTransferStatus.EXECUTED);
+        moneyTranfer.setDirection(Direction.OUTGOING);
 
         Creditor creditor = new Creditor();
         creditor.setName("John Doe");
@@ -124,7 +124,7 @@ public class MockUtils {
 
         moneyTranfer.setIsUrgent(false);
         moneyTranfer.setIsInstant(false);
-        moneyTranfer.setFeeType("SHA");
+        moneyTranfer.setFeeType(FeeType.SHA);
         moneyTranfer.setFeeAccountId("12345678");
 
         Fee fee1 = new Fee();
@@ -172,10 +172,10 @@ public class MockUtils {
         legalPersonBeneficiary.setLegalRepresentativeFiscalCode(null);
 
         TaxRelief taxRelief = new TaxRelief();
-        taxRelief.setTaxReliefId("L449");
+        taxRelief.setTaxReliefId(TaxReliefId.L449);
         taxRelief.setIsCondoUpgrade(false);
         taxRelief.setCreditorFiscalCode("56258745832");
-        taxRelief.setBeneficiaryType("NATURAL_PERSON");
+        taxRelief.setBeneficiaryType(BeneficiaryType.NATURAL_PERSON);
         taxRelief.setNaturalPersonBeneficiary(naturalPersonBeneficiary);
         taxRelief.setLegalPersonBeneficiary(legalPersonBeneficiary);
 
@@ -188,7 +188,7 @@ public class MockUtils {
         paymentRequest.setCurrency("EUR");
         paymentRequest.setIsUrgent(false);
         paymentRequest.setIsInstant(false);
-        paymentRequest.setFeeType("SHA");
+        paymentRequest.setFeeType(FeeType.SHA);
         paymentRequest.setFeeAccountId("45685475");
         paymentRequest.setTaxRelief(taxRelief);
 
