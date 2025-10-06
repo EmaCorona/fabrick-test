@@ -36,6 +36,8 @@ fabrick:
     domain: ${FABRICK_DOMAIN}
     auth-schema: ${FABRICK_AUTH_SCHEMA}
     api-key: ${FABRICK_API_KEY}
+    time-zone: ${FABRICK_TIME_ZONE}
     bank-account: ${fabrick.url.domain}/api/gbs/banking/v4.0/accounts/{accountId}
     balance: ${fabrick.url.domain}/api/gbs/banking/v4.0/accounts/{accountId}/balance
     transactions: ${fabrick.url.domain}/api/gbs/banking/v4.0/accounts/{accountId}/transactions
+    money-transfer: ${fabrick.url.domain}/api/gbs/banking/v4.0/accounts/{accountId}/payments/money-transfers

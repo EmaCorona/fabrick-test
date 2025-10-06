@@ -8,9 +8,11 @@ import it.corona.fabrick.enums.FabrickHeader;
 import it.corona.fabrick.exception.ApplicationException;
 import it.corona.fabrick.model.dto.Balance;
 import it.corona.fabrick.model.dto.BankAccount;
-import it.corona.fabrick.model.dto.Transaction;
 import it.corona.fabrick.model.dto.TransactionPayload;
+import it.corona.fabrick.model.request.PaymentRequest;
 import it.corona.fabrick.model.response.FabrickResponse;
+import it.corona.fabrick.model.dto.MoneyTransfer;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -19,7 +21,6 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -77,6 +78,27 @@ public class FabrickClientImpl implements FabrickClient {
             );
         } catch (WebClientResponseException ex) {
             String message = "Error while requesting account balance for accountId: {}, status: {}, body: {}";
+            log.error(message, accountId, ex.getStatusCode(), ex.getResponseBodyAsString());
+            throw new ApplicationException(ApiError.EXTERNAL_CALL_ERROR, ex.getMessage());
+        }
+    }
+
+    @Override
+    public FabrickResponse<MoneyTransfer> createMoneyTransfer(@Valid PaymentRequest request, Long accountId) {
+        try {
+            Map<String, String> headers = getFabrickHeaders();
+            headers.put("X-Time-Zone", fabrickConfig.getTimeZone());
+
+            return clientInterface.postRequest(
+                    fabrickConfig.getMoneyTransfer(),
+                    new Object[]{accountId},
+                    Map.of(),
+                    headers,
+                    request,
+                    new ParameterizedTypeReference<>() {}
+            );
+        } catch (WebClientResponseException ex) {
+            String message = "Error while creating money transfer for accountId: {}, status: {}, body: {}";
             log.error(message, accountId, ex.getStatusCode(), ex.getResponseBodyAsString());
             throw new ApplicationException(ApiError.EXTERNAL_CALL_ERROR, ex.getMessage());
         }

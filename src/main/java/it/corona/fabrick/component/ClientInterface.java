@@ -48,4 +48,9 @@ public interface ClientInterface {
                       Map<String, String> headers,
                       Object body,
                       ParameterizedTypeReference<T> typeReference);
+
+    <T> T deleteRequest(String uri,
+                        Object[] uriVariables,
+                        Map<String, String> headers,
+                        ParameterizedTypeReference<T> returnType);
 }
