@@ -47,7 +47,7 @@ public class FabrickController {
 
     @PostMapping("/money-transfer")
     @Operation(summary = "Create a money transfer for the specified bank account")
-    public ResponseEntity<FabrickResponse<MoneyTransfer>> createMoneyTransfer(@RequestBody PaymentRequest request, @PathVariable Long accountId) {
+    public ResponseEntity<FabrickResponse<MoneyTransfer>> createMoneyTransfer(@RequestBody @Valid PaymentRequest request, @PathVariable Long accountId) {
         return ResponseEntity.status(HttpStatus.CREATED).body(fabrickService.createMoneyTransfer(request, accountId));
     }
 }

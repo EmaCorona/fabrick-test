@@ -231,6 +231,8 @@ public class FabrickControllerTest {
     @Test
     void givenValidRequest_createMoneyTransfer_shouldReturnCreated() throws Exception {
         /* ***************** ARRANGE ***************** */
+        PaymentRequest request = MockUtils.getMockedPaymentRequest();
+
         FabrickResponse<MoneyTransfer> response = new FabrickResponse<>();
         response.setStatus(FabrickStatus.OK);
         response.setPayload(MockUtils.getMockedMoneyTransfer());
@@ -241,7 +243,7 @@ public class FabrickControllerTest {
         mockMvc.perform(post(CREATE_MONEY_TRANSFER_ENDPOINT, ACCOUNT_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new PaymentRequest())))
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andExpect(content().json(objectMapper.writeValueAsString(response)));
 
@@ -265,6 +267,8 @@ public class FabrickControllerTest {
     @Test
     void givenError_createMoneyTransfer_shouldReturnInternalServerError() throws Exception {
         /* ***************** ARRANGE ***************** */
+        PaymentRequest request = MockUtils.getMockedPaymentRequest();
+
         FabrickError error = new FabrickError();
         error.setCode("500");
         error.setDescription("DESCRIPTION");
@@ -280,7 +284,7 @@ public class FabrickControllerTest {
         mockMvc.perform(post(CREATE_MONEY_TRANSFER_ENDPOINT, ACCOUNT_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new PaymentRequest())))
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isInternalServerError());
 
         /* ***************** ASSERT ***************** */

@@ -28,10 +28,10 @@ public class MoneyTransfer {
     private LocalDate debtorValueDate;
     private LocalDate creditorValueDate;
     private Amount amount;
-    private boolean isUrgent;
-    private boolean isInstant;
+    private Boolean isUrgent;
+    private Boolean isInstant;
     private String feeType;
     private String feeAccountId;
     private List<Fee> fees;
-    private boolean hasTaxRelief;
+    private Boolean hasTaxRelief;
 }

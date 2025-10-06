@@ -6,13 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @Component
@@ -108,7 +106,28 @@ public class ClientInterfaceImpl implements ClientInterface {
                 .uri(buildUri(uri, uriVariables, queryParams))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(Optional.ofNullable(body)))
+                .bodyValue(body)
+                .headers(httpHeaders -> {
+                    if (headers != null) {
+                        headers.forEach(httpHeaders::add);
+                    }
+                })
+                .exchangeToMono(response -> response.bodyToMono(returnType))
+                .block();
+    }
+
+    @Override
+    public <T> T deleteRequest(String uri,
+                               Object[] uriVariables,
+                               Map<String, String> headers,
+                               ParameterizedTypeReference<T> returnType) {
+
+        log.info("DELETE request to {}", uri);
+        return webClientBuilder
+                .build()
+                .delete()
+                .uri(buildUri(uri, uriVariables, null))
+                .accept(MediaType.APPLICATION_JSON)
                 .headers(httpHeaders -> {
                     if (headers != null) {
                         headers.forEach(httpHeaders::add);

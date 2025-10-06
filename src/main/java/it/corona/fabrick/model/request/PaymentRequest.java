@@ -2,6 +2,7 @@ package it.corona.fabrick.model.request;
 
 import it.corona.fabrick.model.dto.moneytransfer.Creditor;
 import it.corona.fabrick.model.dto.moneytransfer.TaxRelief;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class PaymentRequest {
     @NotNull
+    @Valid
     private Creditor creditor;
     private LocalDate executionDate;
     private String uri;
@@ -27,9 +29,10 @@ public class PaymentRequest {
     private BigDecimal amount;
     @NotBlank
     private String currency;
-    private boolean isUrgent;
-    private boolean isInstant;
+    private Boolean isUrgent;
+    private Boolean isInstant;
     private String feeType;
     private String feeAccountId;
+    @Valid
     private TaxRelief taxRelief;
 }

@@ -117,11 +117,9 @@ public class FabrickServiceImpl implements FabrickService {
         log.info("Saving transactions for accountId: {}", accountId);
 
         if (!CollectionUtils.isEmpty(transactions)) {
-            List<TransactionEntity> existingEntities = transactionRepository.findTransactionsByAccountIdAndDateBetween(
-                    accountId, fromAccountingDate, toAccountingDate
-            );
-
-            Map<String, TransactionEntity> existingTrxMap = existingEntities.stream()
+            Map<String, TransactionEntity> existingTrxMap = transactionRepository
+                    .findTransactionsByAccountIdAndDateBetween(accountId, fromAccountingDate, toAccountingDate)
+                    .stream()
                     .collect(Collectors.toMap(
                             trx -> trx.getExternalId() + "-" + trx.getOperationId(),
                             trx -> trx
@@ -143,23 +141,25 @@ public class FabrickServiceImpl implements FabrickService {
 
     @Override
     public FabrickResponse<MoneyTransfer> createMoneyTransfer(@Valid PaymentRequest request, Long accountId) {
-        log.info("Initializing money-transfer from accounId: {}", accountId);
+        log.info("Initializing money transfer for accountId: {}", accountId);
         final FabrickResponse<MoneyTransfer> response = fabrickClient.createMoneyTransfer(request, accountId);
 
         if (response == null) {
-            String message = String.format("Received null response money-transfer request with accountId: %s", accountId);
+            String message = String.format("Received null response for money transfer request with accountId: %s", accountId);
             log.error(message);
             throw new ApplicationException(ApiError.MONEY_TRANSFER_ERROR, message);
         }
 
         if (response.getStatus().equals(FabrickStatus.KO)) {
             String message = String.format(
-                    "Received an error response for money-transfer request with accountId: %s, errors: %s",
+                    "Received an error response for money transfer request with accountId: %s, errors: %s",
                     accountId, (!CollectionUtils.isEmpty(response.getErrors())) ? response.getErrors().toString() : "Unknown error"
             );
 
             handleFabrickError(response, message, ApiError.MONEY_TRANSFER_ERROR);
         }
+
+        log.info("Money transfer created successfully for accountId: {}", accountId);
 
         return response;
     }

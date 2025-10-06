@@ -1,5 +1,6 @@
 package it.corona.fabrick.model.dto.moneytransfer;
 
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Address {
+    @Size(max = 40)
     private String address;
     private String city;
     private String countryCode;

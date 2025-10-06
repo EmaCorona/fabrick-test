@@ -4,6 +4,7 @@ package it.corona.fabrick;
 import it.corona.fabrick.enums.Enumeration;
 import it.corona.fabrick.model.dto.*;
 import it.corona.fabrick.model.dto.moneytransfer.*;
+import it.corona.fabrick.model.request.PaymentRequest;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -122,8 +123,8 @@ public class MockUtils {
         amount.setExchangeRate(1L);
         moneyTranfer.setAmount(amount);
 
-        moneyTranfer.setUrgent(false);
-        moneyTranfer.setInstant(false);
+        moneyTranfer.setIsUrgent(false);
+        moneyTranfer.setIsInstant(false);
         moneyTranfer.setFeeType("SHA");
         moneyTranfer.setFeeAccountId("12345678");
 
@@ -143,5 +144,55 @@ public class MockUtils {
         moneyTranfer.setHasTaxRelief(true);
 
         return moneyTranfer;
+    }
+
+    public static PaymentRequest getMockedPaymentRequest() {
+        Account creditorAccount = new Account();
+        creditorAccount.setAccountCode("IT23A0336844430152923804660");
+        creditorAccount.setBicCode("SELBIT2BXXX");
+
+        Address creditorAddress = new Address();
+        creditorAddress.setAddress(null);
+        creditorAddress.setCity(null);
+        creditorAddress.setCountryCode(null);
+
+        Creditor creditor = new Creditor();
+        creditor.setName("John Doe");
+        creditor.setAccount(creditorAccount);
+        creditor.setAddress(creditorAddress);
+
+        NaturalPersonBeneficiary naturalPersonBeneficiary = new NaturalPersonBeneficiary();
+        naturalPersonBeneficiary.setFiscalCode1("MRLFNC81L04A859L");
+        naturalPersonBeneficiary.setFiscalCode2(null);
+        naturalPersonBeneficiary.setFiscalCode3(null);
+        naturalPersonBeneficiary.setFiscalCode4(null);
+        naturalPersonBeneficiary.setFiscalCode5(null);
+
+        LegalPersonBeneficiary legalPersonBeneficiary = new LegalPersonBeneficiary();
+        legalPersonBeneficiary.setFiscalCode("MRLFNC81L04A859L");
+        legalPersonBeneficiary.setLegalRepresentativeFiscalCode(null);
+
+        TaxRelief taxRelief = new TaxRelief();
+        taxRelief.setTaxReliefId("L449");
+        taxRelief.setIsCondoUpgrade(false);
+        taxRelief.setCreditorFiscalCode("56258745832");
+        taxRelief.setBeneficiaryType("NATURAL_PERSON");
+        taxRelief.setNaturalPersonBeneficiary(naturalPersonBeneficiary);
+        taxRelief.setLegalPersonBeneficiary(legalPersonBeneficiary);
+
+        PaymentRequest paymentRequest = new PaymentRequest();
+        paymentRequest.setCreditor(creditor);
+        paymentRequest.setExecutionDate(LocalDate.parse("2019-04-01"));
+        paymentRequest.setUri("REMITTANCE_INFORMATION");
+        paymentRequest.setDescription("Payment invoice 75/2017");
+        paymentRequest.setAmount(BigDecimal.valueOf(800));
+        paymentRequest.setCurrency("EUR");
+        paymentRequest.setIsUrgent(false);
+        paymentRequest.setIsInstant(false);
+        paymentRequest.setFeeType("SHA");
+        paymentRequest.setFeeAccountId("45685475");
+        paymentRequest.setTaxRelief(taxRelief);
+
+        return paymentRequest;
     }
 }
