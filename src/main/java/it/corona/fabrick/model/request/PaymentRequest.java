@@ -1,8 +1,8 @@
 package it.corona.fabrick.model.request;
 
 import it.corona.fabrick.enums.FeeType;
-import it.corona.fabrick.model.dto.moneytransfer.Creditor;
-import it.corona.fabrick.model.dto.moneytransfer.TaxRelief;
+import it.corona.fabrick.model.dto.Creditor;
+import it.corona.fabrick.model.dto.TaxRelief;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

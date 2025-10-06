@@ -1,4 +1,4 @@
-package it.corona.fabrick.model.dto.moneytransfer;
+package it.corona.fabrick.model.dto;
 
 import it.corona.fabrick.enums.BeneficiaryType;
 import it.corona.fabrick.enums.TaxReliefId;

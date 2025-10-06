@@ -1,4 +1,4 @@
-package it.corona.fabrick.model.dto.moneytransfer;
+package it.corona.fabrick.model.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

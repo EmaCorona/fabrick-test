@@ -1,8 +1,7 @@
-package it.corona.fabrick.model.dto.moneytransfer;
+package it.corona.fabrick.model.dto;
 
 import it.corona.fabrick.enums.Direction;
 import it.corona.fabrick.enums.FeeType;
-import it.corona.fabrick.enums.MoneyTransferStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

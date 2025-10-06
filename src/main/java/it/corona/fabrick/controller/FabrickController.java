@@ -6,7 +6,7 @@ import it.corona.fabrick.model.dto.BankAccount;
 import it.corona.fabrick.model.dto.TransactionPayload;
 import it.corona.fabrick.model.request.PaymentRequest;
 import it.corona.fabrick.model.response.FabrickResponse;
-import it.corona.fabrick.model.dto.moneytransfer.MoneyTransfer;
+import it.corona.fabrick.model.dto.MoneyTransfer;
 import it.corona.fabrick.service.FabrickService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

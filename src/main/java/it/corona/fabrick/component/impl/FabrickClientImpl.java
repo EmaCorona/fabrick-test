@@ -11,7 +11,7 @@ import it.corona.fabrick.model.dto.BankAccount;
 import it.corona.fabrick.model.dto.TransactionPayload;
 import it.corona.fabrick.model.request.PaymentRequest;
 import it.corona.fabrick.model.response.FabrickResponse;
-import it.corona.fabrick.model.dto.moneytransfer.MoneyTransfer;
+import it.corona.fabrick.model.dto.MoneyTransfer;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

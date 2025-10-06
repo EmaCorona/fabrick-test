@@ -3,7 +3,6 @@ package it.corona.fabrick;
 
 import it.corona.fabrick.enums.Enumeration;
 import it.corona.fabrick.model.dto.*;
-import it.corona.fabrick.model.dto.moneytransfer.*;
 import it.corona.fabrick.model.request.PaymentRequest;
 
 import java.math.BigDecimal;

@@ -12,7 +12,7 @@ import it.corona.fabrick.model.dto.TransactionPayload;
 import it.corona.fabrick.model.entity.TransactionEntity;
 import it.corona.fabrick.model.request.PaymentRequest;
 import it.corona.fabrick.model.response.FabrickResponse;
-import it.corona.fabrick.model.dto.moneytransfer.MoneyTransfer;
+import it.corona.fabrick.model.dto.MoneyTransfer;
 import it.corona.fabrick.repository.TransactionRepository;
 import it.corona.fabrick.service.FabrickService;
 import jakarta.validation.Valid;
