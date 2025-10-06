@@ -1,5 +1,7 @@
 package it.corona.fabrick.model.dto.moneytransfer;
 
+import it.corona.fabrick.enums.BeneficiaryType;
+import it.corona.fabrick.enums.TaxReliefId;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,13 +15,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TaxRelief {
-    private String taxReliefId;
+    private TaxReliefId taxReliefId;
     @NotNull
     private Boolean isCondoUpgrade;
     @NotBlank
     private String creditorFiscalCode;
-    @NotBlank
-    private String beneficiaryType;
+    @NotNull
+    private BeneficiaryType beneficiaryType;
     @Valid
     private NaturalPersonBeneficiary naturalPersonBeneficiary;
     @Valid

@@ -1,5 +1,6 @@
 package it.corona.fabrick.model.request;
 
+import it.corona.fabrick.enums.FeeType;
 import it.corona.fabrick.model.dto.moneytransfer.Creditor;
 import it.corona.fabrick.model.dto.moneytransfer.TaxRelief;
 import jakarta.validation.Valid;
@@ -31,7 +32,7 @@ public class PaymentRequest {
     private String currency;
     private Boolean isUrgent;
     private Boolean isInstant;
-    private String feeType;
+    private FeeType feeType;
     private String feeAccountId;
     @Valid
     private TaxRelief taxRelief;
