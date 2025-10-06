@@ -13,6 +13,6 @@ import java.time.LocalDate;
 public interface FabrickService {
     FabrickResponse<BankAccount> getBankAccount(Long accountId);
     FabrickResponse<Balance> getAccountBalance(Long accountId);
-    FabrickResponse<TransactionPayload> getAccountTransactions(Long accountId, LocalDate fromAccountingDate, LocalDate toAccountingDate);
+    FabrickResponse<TransactionPayload> downloadAccountTransactions(Long accountId, LocalDate fromAccountingDate, LocalDate toAccountingDate);
     FabrickResponse<MoneyTransfer> createMoneyTransfer(@Valid PaymentRequest request, Long accountId);
 }

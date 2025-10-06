@@ -203,7 +203,7 @@ public class FabrickServiceImplTest {
     }
 
     @Test
-    void givenStatusOk_getAccountTransactions_ReturnsTransactions() {
+    void givenStatusOk_downloadAccountTransactions_saveAndReturnsTransactions() {
         /* ***************** ARRANGE ***************** */
         Transaction dto1 = Transaction.builder().transactionId("T1").operationId("O1").build();
         Transaction dto2 = Transaction.builder().transactionId("T2").operationId("O2").build();
@@ -222,7 +222,7 @@ public class FabrickServiceImplTest {
         when(fabrickClient.getAccountTransactions(anyLong(), any(LocalDate.class), any(LocalDate.class))).thenReturn(response);
 
         /* ***************** ACT ***************** */
-        FabrickResponse<TransactionPayload> result = fabrickService.getAccountTransactions(ACCOUNT_ID, fromAccountingDate, toAccountingDate);
+        FabrickResponse<TransactionPayload> result = fabrickService.downloadAccountTransactions(ACCOUNT_ID, fromAccountingDate, toAccountingDate);
 
         /* ***************** ASSERT ***************** */
         assertNotNull(result);
@@ -232,13 +232,13 @@ public class FabrickServiceImplTest {
     }
 
     @Test
-    void givenNullResponse_getAccountTransactions_throwApplicationException() {
+    void givenNullResponse_downloadAccountTransactions_throwApplicationException() {
         /* ***************** ARRANGE ***************** */
         when(fabrickClient.getAccountTransactions(anyLong(), any(LocalDate.class), any(LocalDate.class))).thenReturn(null);
 
         /* ***************** ACT ***************** */
         ApplicationException ex = assertThrows(
-                ApplicationException.class, () -> fabrickService.getAccountTransactions(ACCOUNT_ID, fromAccountingDate, toAccountingDate)
+                ApplicationException.class, () -> fabrickService.downloadAccountTransactions(ACCOUNT_ID, fromAccountingDate, toAccountingDate)
         );
 
         /* ***************** ASSERT ***************** */
@@ -247,7 +247,7 @@ public class FabrickServiceImplTest {
     }
 
     @Test
-    void givenStatusKo_getAccountTransactions_throwApplicationException() {
+    void givenStatusKo_downloadAccountTransactions_throwApplicationException() {
         /* ***************** ARRANGE ***************** */
         FabrickResponse<TransactionPayload> response = new FabrickResponse<>();
         response.setStatus(FabrickStatus.KO);
@@ -257,7 +257,7 @@ public class FabrickServiceImplTest {
 
         /* ***************** ACT ***************** */
         ApplicationException ex = assertThrows(
-                ApplicationException.class, () -> fabrickService.getAccountTransactions(ACCOUNT_ID, fromAccountingDate, toAccountingDate)
+                ApplicationException.class, () -> fabrickService.downloadAccountTransactions(ACCOUNT_ID, fromAccountingDate, toAccountingDate)
         );
 
         /* ***************** ASSERT ***************** */
@@ -267,7 +267,7 @@ public class FabrickServiceImplTest {
     }
 
     @Test
-    void givenStatusKoWithoutErrors_getAccountTransactions_throwApplicationException() {
+    void givenStatusKoWithoutErrors_downloadAccountTransactions_throwApplicationException() {
         /* ***************** ARRANGE ***************** */
         FabrickResponse<TransactionPayload> response = new FabrickResponse<>();
         response.setStatus(FabrickStatus.KO);
@@ -276,7 +276,7 @@ public class FabrickServiceImplTest {
 
         /* ***************** ACT ***************** */
         ApplicationException ex = assertThrows(
-                ApplicationException.class, () -> fabrickService.getAccountTransactions(ACCOUNT_ID, fromAccountingDate, toAccountingDate)
+                ApplicationException.class, () -> fabrickService.downloadAccountTransactions(ACCOUNT_ID, fromAccountingDate, toAccountingDate)
         );
 
         /* ***************** ASSERT ***************** */

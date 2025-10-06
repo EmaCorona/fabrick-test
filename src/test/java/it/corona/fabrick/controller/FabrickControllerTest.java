@@ -168,16 +168,16 @@ public class FabrickControllerTest {
     // API: getAccountTransactions
 
     @Test
-    void givenValidRequest_getAccountTransactions_shouldReturnOk() throws Exception {
+    void givenValidRequest_downloadAccountTransactions_shouldReturnOk() throws Exception {
         /* ***************** ARRANGE ***************** */
         FabrickResponse<TransactionPayload> response = new FabrickResponse<>();
         response.setStatus(FabrickStatus.OK);
         response.setPayload(MockUtils.getMockedTransactionPayload());
 
-        when(fabrickService.getAccountTransactions(anyLong(), any(LocalDate.class), any(LocalDate.class))).thenReturn(response);
+        when(fabrickService.downloadAccountTransactions(anyLong(), any(LocalDate.class), any(LocalDate.class))).thenReturn(response);
 
         /* ***************** ACT ***************** */
-        mockMvc.perform(get(GET_ACCOUNT_TRANSACTIONS_ENDPOINT, ACCOUNT_ID)
+        mockMvc.perform(post(GET_ACCOUNT_TRANSACTIONS_ENDPOINT, ACCOUNT_ID)
                         .accept(MediaType.APPLICATION_JSON)
                         .queryParam("fromAccountingDate", LocalDate.now().toString())
                         .queryParam("toAccountingDate", LocalDate.now().toString()))
@@ -185,22 +185,22 @@ public class FabrickControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(response)));
 
         /* ***************** ASSERT ***************** */
-        verify(fabrickService).getAccountTransactions(eq(ACCOUNT_ID), any(LocalDate.class), any(LocalDate.class));
+        verify(fabrickService).downloadAccountTransactions(eq(ACCOUNT_ID), any(LocalDate.class), any(LocalDate.class));
     }
 
     @Test
-    void givenInvalidAccountId_getAccountTransactions_shouldReturnBadRequest() throws Exception {
+    void givenInvalidAccountId_downloadAccountTransactions_shouldReturnBadRequest() throws Exception {
         /* ***************** ACT ***************** */
-        mockMvc.perform(get(GET_ACCOUNT_TRANSACTIONS_ENDPOINT, "XYZ")
+        mockMvc.perform(post(GET_ACCOUNT_TRANSACTIONS_ENDPOINT, "XYZ")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
         /* ***************** ASSERT ***************** */
-        verify(fabrickService, never()).getAccountTransactions(eq(ACCOUNT_ID), any(LocalDate.class), any(LocalDate.class));
+        verify(fabrickService, never()).downloadAccountTransactions(eq(ACCOUNT_ID), any(LocalDate.class), any(LocalDate.class));
     }
 
     @Test
-    void givenError_getAccountTransactions_shouldReturnInternalServerError() throws Exception {
+    void givenError_downloadAccountTransactions_shouldReturnInternalServerError() throws Exception {
         /* ***************** ARRANGE ***************** */
         FabrickError error = new FabrickError();
         error.setCode("500");
@@ -211,11 +211,11 @@ public class FabrickControllerTest {
         response.setStatus(FabrickStatus.KO);
         response.setErrors(List.of(error));
 
-        when(fabrickService.getAccountTransactions(anyLong(), any(LocalDate.class), any(LocalDate.class)))
+        when(fabrickService.downloadAccountTransactions(anyLong(), any(LocalDate.class), any(LocalDate.class)))
                 .thenThrow(new ApplicationException(response.getErrors()));
 
         /* ***************** ACT ***************** */
-        mockMvc.perform(get(GET_ACCOUNT_TRANSACTIONS_ENDPOINT, ACCOUNT_ID)
+        mockMvc.perform(post(GET_ACCOUNT_TRANSACTIONS_ENDPOINT, ACCOUNT_ID)
                         .accept(MediaType.APPLICATION_JSON)
                         .queryParam("fromAccountingDate", LocalDate.now().toString())
                         .queryParam("toAccountingDate", LocalDate.now().toString())
@@ -223,7 +223,7 @@ public class FabrickControllerTest {
                 .andExpect(status().isInternalServerError());
 
         /* ***************** ASSERT ***************** */
-        verify(fabrickService).getAccountTransactions(eq(ACCOUNT_ID), any(LocalDate.class), any(LocalDate.class));
+        verify(fabrickService).downloadAccountTransactions(eq(ACCOUNT_ID), any(LocalDate.class), any(LocalDate.class));
     }
 
     // API: createMoneyTransfer

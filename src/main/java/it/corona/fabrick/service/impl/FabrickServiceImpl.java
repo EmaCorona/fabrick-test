@@ -88,7 +88,7 @@ public class FabrickServiceImpl implements FabrickService {
     }
 
     @Override
-    public FabrickResponse<TransactionPayload> getAccountTransactions(Long accountId, LocalDate fromAccountingDate, LocalDate toAccountingDate) {
+    public FabrickResponse<TransactionPayload> downloadAccountTransactions(Long accountId, LocalDate fromAccountingDate, LocalDate toAccountingDate) {
         log.info("Retrieving transactions for accountId: {}, from {} to {}", accountId, fromAccountingDate, toAccountingDate);
         final FabrickResponse<TransactionPayload> response = fabrickClient.getAccountTransactions(accountId, fromAccountingDate, toAccountingDate);
 
