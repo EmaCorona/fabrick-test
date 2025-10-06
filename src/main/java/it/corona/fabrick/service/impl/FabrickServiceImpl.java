@@ -63,9 +63,9 @@ public class FabrickServiceImpl implements FabrickService {
     }
 
     @Override
-    public FabrickResponse<Balance> getBankAccountBalance(Long accountId) {
+    public FabrickResponse<Balance> getAccountBalance(Long accountId) {
         log.info("Retrieving account balance for accountId: {}", accountId);
-        final FabrickResponse<Balance> response = fabrickClient.getBankAccountBalance(accountId);
+        final FabrickResponse<Balance> response = fabrickClient.getAccountBalance(accountId);
 
         if (response == null) {
             String message = String.format("Received null response for account balance request with accountId: %s", accountId);
@@ -88,7 +88,7 @@ public class FabrickServiceImpl implements FabrickService {
     }
 
     @Override
-    public FabrickResponse<TransactionPayload> getAccountTransactions(Long accountId, LocalDate fromAccountingDate, LocalDate toAccountingDate) {
+    public FabrickResponse<TransactionPayload> downloadAccountTransactions(Long accountId, LocalDate fromAccountingDate, LocalDate toAccountingDate) {
         log.info("Retrieving transactions for accountId: {}, from {} to {}", accountId, fromAccountingDate, toAccountingDate);
         final FabrickResponse<TransactionPayload> response = fabrickClient.getAccountTransactions(accountId, fromAccountingDate, toAccountingDate);
 

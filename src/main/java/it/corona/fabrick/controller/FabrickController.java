@@ -33,16 +33,16 @@ public class FabrickController {
 
     @GetMapping("/balance")
     @Operation(summary = "Get the current balance of the specified bank account")
-    public ResponseEntity<FabrickResponse<Balance>> getBankAccountBalance(@PathVariable Long accountId) {
-        return ResponseEntity.ok(fabrickService.getBankAccountBalance(accountId));
+    public ResponseEntity<FabrickResponse<Balance>> getAccountBalance(@PathVariable Long accountId) {
+        return ResponseEntity.ok(fabrickService.getAccountBalance(accountId));
     }
 
-    @GetMapping("/transactions")
+    @PostMapping("/transactions")
     @Operation(summary = "Get the list of transactions for a bank account between two accounting dates")
-    public ResponseEntity<FabrickResponse<TransactionPayload>> getAccountTransactions(@PathVariable Long accountId,
-                                                                                      @RequestParam LocalDate fromAccountingDate,
-                                                                                      @RequestParam LocalDate toAccountingDate) {
-        return ResponseEntity.ok(fabrickService.getAccountTransactions(accountId, fromAccountingDate, toAccountingDate));
+    public ResponseEntity<FabrickResponse<TransactionPayload>> downloadAccountTransactions(@PathVariable Long accountId,
+                                                                                           @RequestParam LocalDate fromAccountingDate,
+                                                                                           @RequestParam LocalDate toAccountingDate) {
+        return ResponseEntity.ok(fabrickService.downloadAccountTransactions(accountId, fromAccountingDate, toAccountingDate));
     }
 
     @PostMapping("/money-transfer")
