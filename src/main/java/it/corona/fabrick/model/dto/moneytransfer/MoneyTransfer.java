@@ -1,5 +1,8 @@
 package it.corona.fabrick.model.dto.moneytransfer;
 
+import it.corona.fabrick.enums.Direction;
+import it.corona.fabrick.enums.FeeType;
+import it.corona.fabrick.enums.MoneyTransferStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 public class MoneyTransfer {
     private String moneyTransferId;
-    private String status;
+    private Direction status;
     private String direction;
     private Creditor creditor;
     private Debtor debtor;
@@ -30,7 +33,7 @@ public class MoneyTransfer {
     private Amount amount;
     private Boolean isUrgent;
     private Boolean isInstant;
-    private String feeType;
+    private FeeType feeType;
     private String feeAccountId;
     private List<Fee> fees;
     private Boolean hasTaxRelief;
